@@ -22,7 +22,7 @@ into `ownedSkillIds`, then redirect to `/challenge/:slug`. On failure the
 user is sent back to `/paths/:slug?access=grant_failed` with a retry
 message.
 
-### Future real request
+### Request
 
 ```
 POST ${INTEGRATION_HUB_URL}/api/skillid/grant-access
@@ -40,6 +40,25 @@ Content-Type: application/json
 
 `courseSlug` lives on each Skill Path in [server/paths.ts](../server/paths.ts)
 and tells Hub which RealSkill course to grant (e.g. `manipulationmastery`).
+
+### Expected response
+
+```
+{
+  "success": true,
+  "realskillUserId": "<sub>",
+  "skillPathSlug": "<path.slug>",
+  "courseSlug": "<path.courseSlug>",
+  "accessGranted": true,
+  "alreadyHadAccess": false
+}
+```
+
+SkillID treats the Hub response as source of truth. It only proceeds with
+the session update + `/challenge/:slug` redirect when both `success === true`
+and `accessGranted === true`. `alreadyHadAccess: true` is logged but does not
+change routing — SkillID still records the path as owned so its local view
+matches Hub.
 
 ### Stub mode
 

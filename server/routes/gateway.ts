@@ -43,10 +43,17 @@ gatewayRouter.get(
         );
         return;
       }
+      if (grant.alreadyHadAccess) {
+        console.log(
+          `[gateway] hub reports user ${session.sub} already had access to ${slug}`,
+        );
+      }
       const existingOwned = Array.isArray(session.ownedSkillIds)
         ? session.ownedSkillIds
         : [];
-      const newOwned = [...existingOwned, slug];
+      const newOwned = existingOwned.includes(slug)
+        ? existingOwned
+        : [...existingOwned, slug];
       setSessionCookie(res, {
         sub: session.sub,
         email: session.email,
