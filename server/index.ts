@@ -27,6 +27,6 @@ app.get("/", (_req, res) => {
   res.redirect(302, "/paths/one-skill-at-a-time");
 });
 
-app.listen(config.port, () => {
+app.listen(config.port, "0.0.0.0", () => {
   console.log(`SkillID listening on :${config.port}`);
 });
