@@ -24,7 +24,7 @@ app.use("/paths", pathsRouter);
 app.use("/challenge", challengeRouter);
 
 app.get("/", (_req, res) => {
-  res.redirect(302, "/paths/close-with-confidence");
+  res.redirect(302, "/paths/one-skill-at-a-time");
 });
 
 app.listen(config.port, () => {
