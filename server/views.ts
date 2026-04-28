@@ -220,31 +220,94 @@ export function layout(title: string, body: string): string {
     font-weight: 600;
   }
 
-  .stage-bar {
-    background: var(--surface);
+  .stage-path {
+    margin: 0 0 1.75rem;
+    padding: 1.125rem;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: .75rem 1rem;
-    margin-bottom: 1.25rem;
+    border-radius: 18px;
+    background: var(--surface);
+  }
+  .stage-path-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: .875rem;
+  }
+  .stage-path-steps {
     display: flex;
-    flex-direction: column;
-    gap: .125rem;
+    align-items: stretch;
+    gap: 10px;
   }
-  .stage-bar .stage {
-    display: grid;
-    grid-template-columns: 1.5rem 5rem 1fr;
+  .stage-step {
+    display: flex;
     align-items: center;
-    padding: .375rem 0;
-    font-size: .92rem;
+    gap: 10px;
+    min-width: 0;
+    padding: .75rem .875rem;
+    border-radius: 14px;
+    flex: 1;
+    border: 1px solid var(--border);
+    background: #fafbfc;
   }
-  .stage-bar .stage-icon { text-align: center; }
-  .stage-bar .stage-num { font-weight: 600; color: var(--muted); }
-  .stage-bar .stage-label { color: var(--muted); }
-  .stage-bar .stage-current .stage-num,
-  .stage-bar .stage-current .stage-label { color: var(--text); }
-  .stage-bar .stage-current.stage-active .stage-label { color: var(--accent); font-weight: 600; }
-  .stage-bar .stage-current.stage-completed .stage-label { color: var(--success); font-weight: 600; }
-  .stage-bar .stage-current.stage-next .stage-label { font-weight: 600; }
+  .stage-step.stage-next,
+  .stage-step.stage-active {
+    background: #eef3ff;
+    border-color: #c5d6fa;
+  }
+  .stage-step.stage-completed {
+    background: var(--success-bg);
+    border-color: #c3e4ce;
+  }
+  .stage-step.stage-locked {
+    background: var(--locked-bg);
+    opacity: .7;
+  }
+  .stage-step .stage-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.05);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .stage-step.stage-active .stage-icon,
+  .stage-step.stage-next .stage-icon { background: rgba(31,111,235,0.14); }
+  .stage-step.stage-completed .stage-icon { background: rgba(26,140,74,0.18); }
+  .stage-step .stage-number {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .stage-step .stage-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+  }
+  .stage-step.stage-active .stage-title { color: var(--accent); }
+  .stage-step.stage-completed .stage-title { color: var(--success); }
+  .stage-step.stage-locked .stage-number,
+  .stage-step.stage-locked .stage-title { color: var(--muted); }
+  .stage-connector {
+    align-self: center;
+    width: 18px;
+    height: 1px;
+    background: var(--border);
+    flex-shrink: 0;
+  }
+  @media (max-width: 640px) {
+    .stage-path { padding: 14px; }
+    .stage-path-steps { flex-direction: column; align-items: stretch; }
+    .stage-connector { width: 1px; height: 12px; margin-left: 27px; }
+    .stage-step { width: 100%; }
+  }
 
   .completion-block {
     background: var(--success-bg);
@@ -287,19 +350,25 @@ const STAGE_STATUS_ICON: Record<StageStatus, string> = {
 };
 
 export function renderStageBar(view: StageView): string {
-  const items = view.visible
-    .map((stage) => {
-      const isCurrent = stage === view.current;
-      const status: StageStatus = isCurrent ? view.status : "locked";
-      const icon = STAGE_STATUS_ICON[status];
-      const label = STAGE_LABELS[stage];
-      const cls = `stage stage-${status}${isCurrent ? " stage-current" : ""}`;
-      return `<div class="${cls}">
-        <span class="stage-icon" aria-hidden="true">${icon}</span>
-        <span class="stage-num">Stage ${stage}</span>
-        <span class="stage-label">${escapeHtml(label)}</span>
-      </div>`;
-    })
-    .join("");
-  return `<div class="stage-bar" aria-label="Your development path">${items}</div>`;
+  const parts: string[] = [];
+  view.visible.forEach((stage, i) => {
+    const isCurrent = stage === view.current;
+    const status: StageStatus = isCurrent ? view.status : "locked";
+    const icon = STAGE_STATUS_ICON[status];
+    const label = STAGE_LABELS[stage];
+    parts.push(`<div class="stage-step stage-${status}">
+      <div class="stage-icon" aria-hidden="true">${icon}</div>
+      <div>
+        <div class="stage-number">Stage ${stage}</div>
+        <div class="stage-title">${escapeHtml(label)}</div>
+      </div>
+    </div>`);
+    if (i < view.visible.length - 1) {
+      parts.push(`<div class="stage-connector" aria-hidden="true"></div>`);
+    }
+  });
+  return `<div class="stage-path" aria-label="Your development path">
+    <div class="stage-path-label">Your Development Path</div>
+    <div class="stage-path-steps">${parts.join("")}</div>
+  </div>`;
 }
