@@ -2,10 +2,51 @@ import { Router, type Request, type Response } from "express";
 import { and, eq, sql } from "drizzle-orm";
 import { db } from "../db.js";
 import { challengeProgress } from "../schema.js";
-import { getPath } from "../paths.js";
+import { getPath, type SkillPath } from "../paths.js";
 import { requireSession } from "../session.js";
-import { layout, escapeHtml } from "../views.js";
+import { layout, escapeHtml, renderStageBar } from "../views.js";
 import { videoEmbedUrl } from "../urls.js";
+import { currentStage } from "../entitlements.js";
+import type { SessionClaims } from "../jwt.js";
+import { config } from "../config.js";
+
+interface CompletionMessage {
+  headline: string;
+  ctaLabel: string;
+  ctaHref: string;
+}
+
+function completionMessage(
+  session: SessionClaims,
+  path: SkillPath,
+): CompletionMessage {
+  if (session.access_state === "trial" && path.isOnboarding) {
+    return {
+      headline: "You've found your starting point.",
+      ctaLabel: "Start your guided training",
+      ctaHref: config.realskillReactivateUrl,
+    };
+  }
+  if (session.access_state === "trial") {
+    return {
+      headline: "You've completed your first Skill ID.",
+      ctaLabel: "Build your full system",
+      ctaHref: config.realskillReactivateUrl,
+    };
+  }
+  if (session.access_state === "member") {
+    return {
+      headline: "You've completed this Skill ID.",
+      ctaLabel: "Choose your next Skill Path",
+      ctaHref: config.realskillReactivateUrl,
+    };
+  }
+  return {
+    headline: "You've completed your free Skill Path.",
+    ctaLabel: "Keep building your system",
+    ctaHref: config.realskillReactivateUrl,
+  };
+}
 
 export const challengeRouter = Router();
 
@@ -90,8 +131,18 @@ challengeRouter.get("/:slug", async (req: Request, res: Response) => {
     })
     .join("");
 
-  const banner = completed
-    ? `<div class="completed-banner">✓ Challenge complete — all 10 days done.</div>`
+  const stageBar = renderStageBar(
+    currentStage(req.session, completed ? "completed" : "active"),
+  );
+
+  const completionBlock = completed
+    ? (() => {
+        const msg = completionMessage(req.session!, path);
+        return `<div class="completion-block">
+          <h2>${escapeHtml(msg.headline)}</h2>
+          <p><a class="cta btn-primary" href="${escapeHtml(msg.ctaHref)}">${escapeHtml(msg.ctaLabel)}</a></p>
+        </div>`;
+      })()
     : "";
 
   const header = `
@@ -108,9 +159,10 @@ challengeRouter.get("/:slug", async (req: Request, res: Response) => {
   `;
 
   const body = `
+    ${stageBar}
     <h1>${escapeHtml(path.title)}</h1>
     <p class="tagline">${escapeHtml(path.tagline)}</p>
-    ${banner}
+    ${completionBlock}
     ${header}
     <ol class="days">${dayItems}</ol>
   `;

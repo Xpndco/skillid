@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import { getPath } from "../paths.js";
-import { layout, escapeHtml } from "../views.js";
-import { checkPathAccess } from "../entitlements.js";
+import { layout, escapeHtml, renderStageBar } from "../views.js";
+import { checkPathAccess, currentStage } from "../entitlements.js";
 import { config } from "../config.js";
 
 export const pathsRouter = Router();
@@ -92,7 +92,10 @@ pathsRouter.get("/:slug", (req: Request, res: Response) => {
       ? `<p class="guide-copy">After you claim this Skill ID, we'll guide you through a 10-day Skill Path that shows you exactly how to use it inside RealSkill.</p>`
       : "";
 
+  const stageBar = renderStageBar(currentStage(req.session, "browsing"));
+
   const body = `
+    ${stageBar}
     <h1>${escapeHtml(path.title)}</h1>
     <p class="tagline">${escapeHtml(path.tagline)}</p>
     <p>10-day Skill Path. Complete one day at a time.</p>

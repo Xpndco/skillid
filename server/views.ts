@@ -1,3 +1,5 @@
+import type { StageStatus, StageView } from "./entitlements.js";
+
 export function escapeHtml(s: string): string {
   return s
     .replace(/&/g, "&amp;")
@@ -218,6 +220,47 @@ export function layout(title: string, body: string): string {
     font-weight: 600;
   }
 
+  .stage-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .75rem 1rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: .125rem;
+  }
+  .stage-bar .stage {
+    display: grid;
+    grid-template-columns: 1.5rem 5rem 1fr;
+    align-items: center;
+    padding: .375rem 0;
+    font-size: .92rem;
+  }
+  .stage-bar .stage-icon { text-align: center; }
+  .stage-bar .stage-num { font-weight: 600; color: var(--muted); }
+  .stage-bar .stage-label { color: var(--muted); }
+  .stage-bar .stage-current .stage-num,
+  .stage-bar .stage-current .stage-label { color: var(--text); }
+  .stage-bar .stage-current.stage-active .stage-label { color: var(--accent); font-weight: 600; }
+  .stage-bar .stage-current.stage-completed .stage-label { color: var(--success); font-weight: 600; }
+  .stage-bar .stage-current.stage-next .stage-label { font-weight: 600; }
+
+  .completion-block {
+    background: var(--success-bg);
+    border: 1px solid #c3e4ce;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .completion-block h2 {
+    color: var(--success);
+    margin: 0 0 1rem;
+    font-size: 1.35rem;
+    letter-spacing: -0.01em;
+  }
+  .completion-block p { margin: 0; }
+
   @media (max-width: 480px) {
     body { padding: 1.25rem .875rem 3rem; }
     .day-card.current .actions .cta { width: 100%; text-align: center; }
@@ -228,4 +271,35 @@ export function layout(title: string, body: string): string {
 ${body}
 </body>
 </html>`;
+}
+
+const STAGE_LABELS: Record<2 | 3 | 4, string> = {
+  2: "Guided Challenge",
+  3: "Structured Training",
+  4: "Skill Plus",
+};
+
+const STAGE_STATUS_ICON: Record<StageStatus, string> = {
+  next: "⏭",
+  active: "🔄",
+  completed: "✅",
+  locked: "🔒",
+};
+
+export function renderStageBar(view: StageView): string {
+  const items = view.visible
+    .map((stage) => {
+      const isCurrent = stage === view.current;
+      const status: StageStatus = isCurrent ? view.status : "locked";
+      const icon = STAGE_STATUS_ICON[status];
+      const label = STAGE_LABELS[stage];
+      const cls = `stage stage-${status}${isCurrent ? " stage-current" : ""}`;
+      return `<div class="${cls}">
+        <span class="stage-icon" aria-hidden="true">${icon}</span>
+        <span class="stage-num">Stage ${stage}</span>
+        <span class="stage-label">${escapeHtml(label)}</span>
+      </div>`;
+    })
+    .join("");
+  return `<div class="stage-bar" aria-label="Your development path">${items}</div>`;
 }

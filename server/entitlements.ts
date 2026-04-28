@@ -33,3 +33,29 @@ export function checkPathAccess(
   }
   return { kind: "blocked", reason: "no_access" };
 }
+
+export type StageContext = "browsing" | "active" | "completed";
+export type StageNumber = 2 | 3 | 4;
+export type StageStatus = "next" | "active" | "completed" | "locked";
+
+export interface StageView {
+  current: StageNumber;
+  status: StageStatus;
+  visible: StageNumber[];
+}
+
+export function currentStage(
+  session: SessionClaims | null | undefined,
+  context: StageContext,
+): StageView {
+  if (session?.access_state === "member") {
+    return { current: 3, status: "active", visible: [3, 4] };
+  }
+  const status: StageStatus =
+    context === "browsing"
+      ? "next"
+      : context === "completed"
+        ? "completed"
+        : "active";
+  return { current: 2, status, visible: [2, 3, 4] };
+}
