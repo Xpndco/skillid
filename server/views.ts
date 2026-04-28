@@ -227,6 +227,36 @@ export function layout(title: string, body: string): string {
     border-radius: 18px;
     background: var(--surface);
   }
+  .stage-1-complete {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(0,0,0,0.035);
+    border: 1px solid var(--border);
+    opacity: .9;
+  }
+  .stage-1-complete .stage-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    background: var(--success);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .stage-1-complete .stage-1-text {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
   .stage-path-label {
     font-size: 11px;
     font-weight: 700;
@@ -367,7 +397,15 @@ export function renderStageBar(view: StageView): string {
       parts.push(`<div class="stage-connector" aria-hidden="true"></div>`);
     }
   });
+  const stage1Pill =
+    view.current === 2
+      ? `<div class="stage-1-complete">
+        <span class="stage-check" aria-hidden="true">✓</span>
+        <span class="stage-1-text">Starting point selected</span>
+      </div>`
+      : "";
   return `<div class="stage-path" aria-label="Your development path">
+    ${stage1Pill}
     <div class="stage-path-label">Your Development Path</div>
     <div class="stage-path-steps">${parts.join("")}</div>
   </div>`;
