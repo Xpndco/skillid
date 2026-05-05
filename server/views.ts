@@ -354,176 +354,83 @@ export function layout(title: string, body: string): string {
   }
   .completion-block p { margin: 0; }
 
-  /* Skill ID Method — Dashboard */
-  .progress-band {
+  /* Skill ID Method explainer page */
+  .method-intro {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 1.125rem 1.25rem;
-    margin-bottom: 1rem;
-  }
-  .progress-counts {
+    padding: 1rem 1.25rem;
+    margin: 0 0 1.25rem;
     color: var(--muted);
-    font-size: .95rem;
-    margin-bottom: .625rem;
+    line-height: 1.55;
   }
-  .progress-counts strong { color: var(--text); font-weight: 700; }
-  .progress-bar-tri {
-    display: flex;
-    gap: 3px;
-    height: 8px;
-    border-radius: 99px;
-    overflow: hidden;
-  }
-  .progress-bar-tri .seg { flex: 1; height: 100%; }
-  .progress-bar-tri .seg-got { background: var(--success); }
-  .progress-bar-tri .seg-needs { background: #d99025; }
-  .progress-bar-tri .seg-untouched { background: #e3e6ec; }
-
-  .next-card {
-    background: #eef3ff;
-    border: 1px solid #c5d6fa;
-    border-radius: 12px;
-    padding: 1.25rem;
-    margin-bottom: 1.25rem;
-  }
-  .next-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: .5rem;
-  }
-  .next-title {
-    font-size: 1.15rem;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: .5rem;
-  }
-  .next-summary {
-    color: var(--muted);
-    margin: 0 0 1rem;
-    font-size: .95rem;
-  }
-  .next-card p:last-child { margin-bottom: 0; }
-
-  .item-list { display: flex; flex-direction: column; gap: 1rem; }
-  .item-group {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: .5rem;
-  }
-  .item-group-label {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: .5rem .75rem .25rem;
-  }
-  .item-row {
-    display: grid;
-    grid-template-columns: 32px 1fr auto;
-    align-items: center;
-    gap: 12px;
-    padding: .75rem;
-    border-radius: 10px;
-    text-decoration: none;
-    color: inherit;
-    transition: background .12s ease;
-  }
-  .item-row:hover { background: #f4f6fa; }
-  .item-row .item-badge {
-    width: 28px; height: 28px;
-    border-radius: 999px;
-    display: flex; align-items: center; justify-content: center;
-    background: #eceef2;
-    color: var(--muted);
-    font-weight: 700; font-size: .85rem;
-  }
-  .item-row .item-body { display: flex; flex-direction: column; min-width: 0; }
-  .item-row .item-num { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
-  .item-row .item-title { font-size: 15px; font-weight: 600; color: var(--text); line-height: 1.25; }
-  .item-row .item-action { font-size: .85rem; font-weight: 600; color: var(--accent); }
-
-  .item-row.item-got .item-badge { background: var(--success); color: #fff; }
-  .item-row.item-got .item-action { color: var(--muted); }
-  .item-row.item-needs .item-badge { background: #d99025; color: #fff; }
-  .item-row.item-needs .item-action { color: #c47a16; }
-
-  /* Inside-item view */
-  .back-link { color: var(--muted); text-decoration: none; font-size: .9rem; }
-  .back-link:hover { color: var(--text); }
-  .item-num-label {
-    font-size: 11px; font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--muted);
-    margin: 0 0 .5rem;
-  }
-  .video {
-    margin: 1rem 0 1.25rem;
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 12px;
-    overflow: hidden;
-    background: #000;
-  }
-  .video iframe { width: 100%; height: 100%; border: 0; display: block; }
-  .item-actions {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.125rem 1.25rem;
-    margin-bottom: 1.25rem;
-  }
-  .train-instruction { margin: 0 0 .875rem; color: var(--muted); }
-  .item-actions p:last-child { margin-bottom: 0; }
-
-  .mark-form {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1.125rem 1.25rem;
-  }
-  .mark-prompt {
-    margin: 0 0 .875rem;
-    font-weight: 600;
-    color: var(--text);
-  }
-  .mark-buttons {
-    display: flex;
-    gap: .625rem;
-    flex-wrap: wrap;
-  }
-  .btn-mark {
-    border: 1px solid var(--border);
-    color: var(--text);
-    background: #fff;
-    flex: 1 1 0;
-    min-width: 8rem;
-    text-align: center;
-  }
-  .btn-mark.mark-got { background: var(--success); color: #fff; border-color: var(--success); }
-  .btn-mark.mark-got:hover { background: #166e3a; }
-  .btn-mark.mark-needs:hover { background: #fff7e6; border-color: #f5d48a; }
-  .btn-mark.mark-not-yet:hover { background: #f0f2f5; }
-  .current-mark {
+  .cta-train {
     display: inline-block;
-    margin-top: 1rem;
-    font-size: .85rem;
-    font-weight: 600;
+    margin-bottom: 1.5rem;
+  }
+
+  .method-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem 1.75rem;
+    margin: 0 0 1.5rem;
+  }
+  .method-card h2 {
+    font-size: 1.15rem;
+    margin: 0 0 1.125rem;
+    letter-spacing: -0.01em;
+  }
+  .method-steps {
+    list-style: none;
+    counter-reset: step;
+    padding: 0;
+    margin: 0;
+  }
+  .method-steps > li {
+    position: relative;
+    counter-increment: step;
+    padding: 0 0 1rem 2.75rem;
+    margin: 0 0 1rem;
+    border-bottom: 1px solid #f0f1f4;
+    line-height: 1.5;
+  }
+  .method-steps > li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .method-steps > li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: -2px;
+    width: 28px;
+    height: 28px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: .82rem;
+  }
+  .method-steps strong { color: var(--text); }
+  .method-steps ul {
+    margin: .5rem 0 0;
+    padding-left: 1.125rem;
+    list-style: disc;
+  }
+  .method-steps ul li {
+    margin: .2rem 0;
     color: var(--muted);
   }
-  .current-mark.mark-got { color: var(--success); }
-  .current-mark.mark-needs { color: #c47a16; }
 
   @media (max-width: 480px) {
     body { padding: 1.25rem .875rem 3rem; }
     .day-card.current .actions .cta { width: 100%; text-align: center; }
-    .mark-buttons .btn-mark { width: 100%; }
+    .method-card { padding: 1.25rem; }
   }
 </style>
 </head>
