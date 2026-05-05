@@ -86,3 +86,31 @@ export async function grantSkillIdAccessViaHub(
     return { ok: false, mocked: false, error: (err as Error).message };
   }
 }
+
+export async function emitHubEvent(
+  name: string,
+  payload: Record<string, unknown>,
+): Promise<void> {
+  if (!config.integrationHubUrl || !config.integrationHubApiKey) {
+    console.log(`[hub event] (mock) ${name}:`, payload);
+    return;
+  }
+  try {
+    const res = await fetch(
+      `${config.integrationHubUrl}/api/skillid/events`,
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${config.integrationHubApiKey}`,
+        },
+        body: JSON.stringify({ event: name, ...payload }),
+      },
+    );
+    if (!res.ok) {
+      console.warn(`[hub event] ${name} failed: ${res.status}`);
+    }
+  } catch (err) {
+    console.warn(`[hub event] ${name} error:`, (err as Error).message);
+  }
+}

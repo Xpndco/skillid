@@ -89,7 +89,7 @@ pathsRouter.get("/:slug", (req: Request, res: Response) => {
 
   const guideCopy =
     cta.kind === "primary"
-      ? `<p class="guide-copy">After you claim this Skill ID, we'll guide you through a 10-day Skill Path that shows you exactly how to use it inside RealSkill.</p>`
+      ? `<p class="guide-copy">After you claim this Skill ID, we'll walk you through the Skill ID Method &mdash; the loop-based system that shows you how to actually build this skill inside RealSkill.</p>`
       : "";
 
   const stageBar = renderStageBar(currentStage(req.session, "browsing"));
@@ -98,7 +98,7 @@ pathsRouter.get("/:slug", (req: Request, res: Response) => {
     ${stageBar}
     <h1>${escapeHtml(path.title)}</h1>
     <p class="tagline">${escapeHtml(path.tagline)}</p>
-    <p>10-day Skill Path. Complete one day at a time.</p>
+    <p>Train through this Skill ID using the Skill ID Method: watch, do, mark, loop back.</p>
     ${blockedBanner}
     ${guideCopy}
     ${ctaBlock}

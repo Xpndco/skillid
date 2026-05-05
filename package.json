@@ -8,7 +8,8 @@
     "start": "NODE_ENV=production tsx server/index.ts",
     "check": "tsc --noEmit",
     "db:push": "drizzle-kit push",
-    "mint-token": "tsx scripts/mint-test-token.ts"
+    "mint-token": "tsx scripts/mint-test-token.ts",
+    "migrate-method": "tsx scripts/migrate-method.ts"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",

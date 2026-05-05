@@ -5,7 +5,11 @@ import {
   timestamp,
   uuid,
   uniqueIndex,
+  jsonb,
 } from "drizzle-orm/pg-core";
+
+export type MarkValue = "got_it" | "needs_work" | "not_yet";
+export type ItemMarks = Record<string, MarkValue>;
 
 export const challengeProgress = pgTable(
   "challenge_progress",
@@ -15,6 +19,8 @@ export const challengeProgress = pgTable(
     skillPathSlug: text("skill_path_slug").notNull(),
     currentDay: integer("current_day").notNull().default(1),
     status: text("status").notNull().default("active"),
+    marks: jsonb("marks").$type<ItemMarks>().notNull().default({}),
+    lastLoopbackAt: timestamp("last_loopback_at", { withTimezone: true }),
     enrolledAt: timestamp("enrolled_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
